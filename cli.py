@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 
-from src.live_tempo_estimation import LiveTempoEstimation
+from src.live_tempo_detection import LiveTempoDetection
 from src.tempo_estimators import PhaseNoveltyEstimator
 
 ESTIMATORS = [
@@ -32,11 +32,11 @@ def main() -> None:
         "--period",
         type=float,
         help="The interval at which the tempo is estimated (in seconds)",
-        default=LiveTempoEstimation.DEFAULT_ESTIMATION_INTERVAL_S,
+        default=LiveTempoDetection.DEFAULT_ESTIMATION_INTERVAL_S,
     )
 
     args = parser.parse_args()
-    LiveTempoEstimation(
+    LiveTempoDetection(
         initial_tempo=args.initial,
         tempo_estimators=ESTIMATORS,
         target_tempos=args.targets if args.targets is not None else [args.initial],

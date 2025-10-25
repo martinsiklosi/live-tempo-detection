@@ -10,7 +10,7 @@ import numpy as np
 from src.data_models import Audio, ModelFactoryType
 
 
-class LiveTempoEstimation:
+class LiveTempoDetection:
     DEFAULT_ESTIMATION_INTERVAL_S = 0.2
 
     def __init__(
