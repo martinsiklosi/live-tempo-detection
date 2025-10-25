@@ -1,7 +1,5 @@
 # TODO
 
-## Restructure repo file structure
-
 ## Remove estimation quantization
 
 ## Restructure python code?

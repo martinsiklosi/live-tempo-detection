@@ -1,13 +1,10 @@
 from argparse import ArgumentParser
 
-from live_tempo_estimation import LiveTempoEstimation
-from tempo_estimators_robert import PhaseNoveltyEstimator
-
-# from tempo_estimators_nahir import CNNTempoEstimator, Model
+from src.live_tempo_estimation import LiveTempoEstimation
+from src.tempo_estimators_robert import PhaseNoveltyEstimator
 
 ESTIMATORS = [
     PhaseNoveltyEstimator,
-    # CNNTempoEstimator,
 ]
 
 

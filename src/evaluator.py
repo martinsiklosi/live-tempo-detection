@@ -1,6 +1,6 @@
 import numpy as np
 
-from data_models import Audio, ModelFactoryType
+from src.data_models import Audio, ModelFactoryType
 
 
 def evaluate_estimator(

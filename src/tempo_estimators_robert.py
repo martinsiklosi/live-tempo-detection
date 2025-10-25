@@ -3,10 +3,10 @@ from time import perf_counter_ns
 import numpy as np
 # import matplotlib.pyplot as plt
 
-from tempo import tempo_distribution_around_guess
-from data_models import AbstractTempoEstimator, Audio
-from novelty import phase_novelty
-from streamable_stft import StreamableSTFT
+from src.tempo import tempo_distribution_around_guess
+from src.data_models import AbstractTempoEstimator, Audio
+from src.novelty import phase_novelty
+from src.streamable_stft import StreamableSTFT
 
 
 # class STFTBenchmark(AbstractTempoEstimator):

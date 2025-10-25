@@ -1,13 +1,12 @@
 from dataclasses import dataclass
 from typing import Literal
 from pathlib import Path
+import time
 
 import matplotlib.pyplot as plt
 
-from data_models import Audio, BeatAnnotation, ModelFactoryType
-from evaluator import evaluate_estimator, rmse, factor2_rmse
-
-import time
+from src.data_models import Audio, BeatAnnotation, ModelFactoryType
+from src.evaluator import evaluate_estimator, rmse, factor2_rmse
 
 
 @dataclass
@@ -21,120 +20,120 @@ class AnnotatedSample:
 
 validation_samples = {
     "Fluorescent adolescent": AnnotatedSample(
-        Audio.from_file(Path("audio/flourecent-adolecent-no-metronome.wav")),
+        Audio.from_file(Path("data/audio/flourecent-adolecent-no-metronome.wav")),
         BeatAnnotation.from_json(
-            Path("annotations/flourecent-adolecent-no-metronome.json")
+            Path("data/annotations/flourecent-adolecent-no-metronome.json")
         ),
         110,
         start_time=10,
         end_time=190,
     ),
     "Funk jam M": AnnotatedSample(
-        Audio.from_file(Path("audio/funk-jam-115-metronome.wav")),
-        BeatAnnotation.from_json(Path("annotations/funk-jam-115-metronome.json")),
+        Audio.from_file(Path("data/audio/funk-jam-115-metronome.wav")),
+        BeatAnnotation.from_json(Path("data/annotations/funk-jam-115-metronome.json")),
         115,
         start_time=2,
         end_time=90,
     ),
     "idk jam": AnnotatedSample(
-        Audio.from_file(Path("audio/idk-jam-no-metronome.wav")),
-        BeatAnnotation.from_json(Path("annotations/idk-jam-no-metronome.json")),
+        Audio.from_file(Path("data/audio/idk-jam-no-metronome.wav")),
+        BeatAnnotation.from_json(Path("data/annotations/idk-jam-no-metronome.json")),
         155,
         end_time=62,
     ),
     "iädb M": AnnotatedSample(
-        Audio.from_file(Path("audio/iädb-162-metronome.wav")),
-        BeatAnnotation.from_json(Path("annotations/iädb-162-metronome.json")),
+        Audio.from_file(Path("data/audio/iädb-162-metronome.wav")),
+        BeatAnnotation.from_json(Path("data/annotations/iädb-162-metronome.json")),
         162,
         start_time=3,
         end_time=180,
     ),
     "Paint it black": AnnotatedSample(
-        Audio.from_file(Path("audio/paint-it-black-no-metronome.wav")),
-        BeatAnnotation.from_json(Path("annotations/paint-it-black-no-metronome.json")),
+        Audio.from_file(Path("data/audio/paint-it-black-no-metronome.wav")),
+        BeatAnnotation.from_json(Path("data/annotations/paint-it-black-no-metronome.json")),
         150,
         start_time=1,
         end_time=185,
     ),
     "Guitar only": AnnotatedSample(
-        Audio.from_file(Path("audio/some-guitar-no-metronome.wav")),
-        BeatAnnotation.from_json(Path("annotations/some-guitar-no-metronome.json")),
+        Audio.from_file(Path("data/audio/some-guitar-no-metronome.wav")),
+        BeatAnnotation.from_json(Path("data/annotations/some-guitar-no-metronome.json")),
         70,
     ),
     "Take five": AnnotatedSample(
-        Audio.from_file(Path("audio/take-five-but-bad-no-metronome.wav")),
+        Audio.from_file(Path("data/audio/take-five-but-bad-no-metronome.wav")),
         BeatAnnotation.from_json(
-            Path("annotations/take-five-but-bad-no-metronome.json")
+            Path("data/annotations/take-five-but-bad-no-metronome.json")
         ),
         145,
         start_time=0,
         end_time=62,
     ),
     "Take me out": AnnotatedSample(
-        Audio.from_file(Path("audio/take-me-out-no-metronome.wav")),
-        BeatAnnotation.from_json(Path("annotations/take-me-out-no-metronome-fix.json")),
+        Audio.from_file(Path("data/audio/take-me-out-no-metronome.wav")),
+        BeatAnnotation.from_json(Path("data/annotations/take-me-out-no-metronome-fix.json")),
         150,
     ),
     "Fool in the rain - Studio": AnnotatedSample(
-        Audio.from_file("audio/fool-in-the-rain-studio-133-ish.mp3"),
-        BeatAnnotation.from_json("annotations/fool-in-the-rain-studio-133-ish.json"),
+        Audio.from_file("data/audio/fool-in-the-rain-studio-133-ish.mp3"),
+        BeatAnnotation.from_json("data/annotations/fool-in-the-rain-studio-133-ish.json"),
         130,
         start_time=20,
         end_time=250,
     ),
     "iädb - Studio": AnnotatedSample(
-        Audio.from_file("audio/iädb-studio-162.wav"),
-        BeatAnnotation.from_json("annotations/iädb-studio-162.json"),
+        Audio.from_file("data/audio/iädb-studio-162.wav"),
+        BeatAnnotation.from_json("data/annotations/iädb-studio-162.json"),
         162,
     ),
     "In bloom - Studio": AnnotatedSample(
-        Audio.from_file("audio/in-bloom-studio-157-ish.mp3"),
-        BeatAnnotation.from_json("annotations/in-bloom-studio-157-ish.json"),
+        Audio.from_file("data/audio/in-bloom-studio-157-ish.mp3"),
+        BeatAnnotation.from_json("data/annotations/in-bloom-studio-157-ish.json"),
         150,
     ),
     "Killing in the name - Studio": AnnotatedSample(
-        Audio.from_file("audio/killing-in-the-name-studio-122-ish.mp3"),
+        Audio.from_file("data/audio/killing-in-the-name-studio-122-ish.mp3"),
         BeatAnnotation.from_json(
             "annotations/killing-in-the-name-studio-122-ish-fix.json"
         ),
         120,
     ),
     "Paranoid - Studio": AnnotatedSample(
-        Audio.from_file("audio/paranoid-studio-164-ish.mp3"),
-        BeatAnnotation.from_json("annotations/paranoid-studio-164-ish.json"),
+        Audio.from_file("data/audio/paranoid-studio-164-ish.mp3"),
+        BeatAnnotation.from_json("data/annotations/paranoid-studio-164-ish.json"),
         160,
     ),
     "Superstition - Studio": AnnotatedSample(
-        Audio.from_file("audio/superstition-studio-100-ish.mp3"),
-        BeatAnnotation.from_json("annotations/superstition-studio-100-ish.json"),
+        Audio.from_file("data/audio/superstition-studio-100-ish.mp3"),
+        BeatAnnotation.from_json("data/annotations/superstition-studio-100-ish.json"),
         100,
     ),
     "Take me out - Studio": AnnotatedSample(
-        Audio.from_file("audio/take-me-out-studio-141-ish.mp3"),
-        BeatAnnotation.from_json("annotations/take-me-out-studio-141-ish.json"),
+        Audio.from_file("data/audio/take-me-out-studio-141-ish.mp3"),
+        BeatAnnotation.from_json("data/annotations/take-me-out-studio-141-ish.json"),
         140,
     ),
 }
 
 test_samples = {
     "bad-fills": AnnotatedSample(
-        Audio.from_file("test_audio/bad-fills.wav"),
-        BeatAnnotation.from_json("test_annotations/bad-fills.json"),
+        Audio.from_file("data/test_audio/bad-fills.wav"),
+        BeatAnnotation.from_json("data/test_annotations/bad-fills.json"),
         160,
     ),
     "bad-purdie-in-6-4": AnnotatedSample(
-        Audio.from_file("test_audio/bad-purdie-in-6-4.wav"),
-        BeatAnnotation.from_json("test_annotations/bad-purdie-in-6-4.json"),
+        Audio.from_file("data/test_audio/bad-purdie-in-6-4.wav"),
+        BeatAnnotation.from_json("data/test_annotations/bad-purdie-in-6-4.json"),
         150,
     ),
     "not-just-8ths": AnnotatedSample(
-        Audio.from_file("test_audio/not-just-8ths.wav"),
-        BeatAnnotation.from_json("test_annotations/not-just-8ths.json"),
+        Audio.from_file("data/test_audio/not-just-8ths.wav"),
+        BeatAnnotation.from_json("data/test_annotations/not-just-8ths.json"),
         140,
     ),
     "varying-a-bit": AnnotatedSample(
-        Audio.from_file("test_audio/varying-a-bit.wav"),
-        BeatAnnotation.from_json("test_annotations/varying-a-bit.json"),
+        Audio.from_file("data/test_audio/varying-a-bit.wav"),
+        BeatAnnotation.from_json("data/test_annotations/varying-a-bit.json"),
         120,
     ),
 }

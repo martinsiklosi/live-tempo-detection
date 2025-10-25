@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import sounddevice as sd
 import numpy as np
 
-from data_models import Audio, ModelFactoryType
+from src.data_models import Audio, ModelFactoryType
 
 
 class LiveTempoEstimation:

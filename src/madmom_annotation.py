@@ -1,7 +1,7 @@
 import numpy as np
 import madmom
 
-from data_models import BeatAnnotation
+from src.data_models import BeatAnnotation
 
 
 def beat_annotation_from_audio(file: str) -> BeatAnnotation:

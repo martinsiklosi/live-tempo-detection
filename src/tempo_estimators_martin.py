@@ -2,7 +2,7 @@ import random
 
 import numpy as np
 
-from data_models import AbstractTempoEstimator, Audio
+from src.data_models import AbstractTempoEstimator, Audio
 from live_tempo_estimation import LiveTempoEstimation
 
 
