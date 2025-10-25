@@ -1,7 +1,5 @@
 # TODO
 
-## Remove estimation quantization
-
 ## Restructure python code?
 
 ## Add tempo templated
