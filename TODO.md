@@ -4,8 +4,6 @@
 
 ## Restructure python code?
 
-## Format everything
-
 ## Add tempo templated
 
 Want to be able to from beat annotation create and plot a tempo curve so you can follow it

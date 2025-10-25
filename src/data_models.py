@@ -138,7 +138,7 @@ class AbstractTempoEstimator(ABC):
     @abstractmethod
     def listen(self, new_audio: Audio) -> float | None:
         """
-        Takes audio new_audio that represents all new samples since last time. 
+        Takes audio new_audio that represents all new samples since last time.
         Should return a bpm as a float if there is one.
         If there is no tempo, None can be returned.
         """

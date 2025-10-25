@@ -14,26 +14,12 @@ def phase_novelty(y: np.ndarray) -> np.ndarray:
     # Sum over all frequencies, perhaps this shouldn't be done?
     pn = np.sum(novelty, axis=0)
 
-    # pn -= np.convolve(
-    #     pn,
-    #     np.ones(moving_window_size) / moving_window_size,
-    #     mode="same",
-    #     )
-    #
-    # pn[pn < 0] = 0
-
     return pn
 
+
 def energy_envelope(y: np.ndarray) -> np.ndarray:
-    en = np.abs(y).sum(axis=0)
+    return np.abs(y).sum(axis=0)
 
-    # en -= np.convolve(
-    #     en,
-    #     np.ones(moving_window_size) / moving_window_size,
-    #     mode="same",
-    #     )
-
-    return en
 
 def energy_novelty(y: np.ndarray) -> np.ndarray:
     en = energy_envelope(y)
@@ -41,7 +27,8 @@ def energy_novelty(y: np.ndarray) -> np.ndarray:
     den[den < 0] = 0
     return den
 
-def pure_phase_novelty(y):
+
+def pure_phase_novelty(y: np.ndarray) -> np.ndarray:
     phase = np.angle(y)
     magnitude = np.abs(y)
     dphase = (phase[:, 2:] - phase[:, :-2]) / 2  # shape [K, N-2]

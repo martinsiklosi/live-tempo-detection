@@ -50,14 +50,18 @@ validation_samples = {
     ),
     "Paint it black": AnnotatedSample(
         Audio.from_file(Path("data/audio/paint-it-black-no-metronome.wav")),
-        BeatAnnotation.from_json(Path("data/annotations/paint-it-black-no-metronome.json")),
+        BeatAnnotation.from_json(
+            Path("data/annotations/paint-it-black-no-metronome.json")
+        ),
         150,
         start_time=1,
         end_time=185,
     ),
     "Guitar only": AnnotatedSample(
         Audio.from_file(Path("data/audio/some-guitar-no-metronome.wav")),
-        BeatAnnotation.from_json(Path("data/annotations/some-guitar-no-metronome.json")),
+        BeatAnnotation.from_json(
+            Path("data/annotations/some-guitar-no-metronome.json")
+        ),
         70,
     ),
     "Take five": AnnotatedSample(
@@ -71,12 +75,16 @@ validation_samples = {
     ),
     "Take me out": AnnotatedSample(
         Audio.from_file(Path("data/audio/take-me-out-no-metronome.wav")),
-        BeatAnnotation.from_json(Path("data/annotations/take-me-out-no-metronome-fix.json")),
+        BeatAnnotation.from_json(
+            Path("data/annotations/take-me-out-no-metronome-fix.json")
+        ),
         150,
     ),
     "Fool in the rain - Studio": AnnotatedSample(
         Audio.from_file("data/audio/fool-in-the-rain-studio-133-ish.mp3"),
-        BeatAnnotation.from_json("data/annotations/fool-in-the-rain-studio-133-ish.json"),
+        BeatAnnotation.from_json(
+            "data/annotations/fool-in-the-rain-studio-133-ish.json"
+        ),
         130,
         start_time=20,
         end_time=250,
@@ -145,7 +153,7 @@ def test_on_samples(
     measure_time=False,
     strip_audio=True,
     window_size: float = 1,
-):
+) -> None:
     samples = {"validation": validation_samples, "test": test_samples}[split]
     for name, s in samples.items():
         print(f"Running analysis on {name}")
@@ -165,7 +173,7 @@ def test_on_sample(
     title=None,
     strip_audio=True,
     window_size: float = 1,
-):
+) -> None:
     if strip_audio:
         audio = s.audio[s.start_time : s.end_time]
     else:
