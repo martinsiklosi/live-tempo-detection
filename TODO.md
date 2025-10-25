@@ -10,4 +10,4 @@ Want to be able to from beat annotation create and plot a tempo curve so you can
 
 ## Make plot better looking
 
-Fatter lines, dark mode? grid?
+dark mode? grid?

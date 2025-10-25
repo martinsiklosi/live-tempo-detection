@@ -56,12 +56,22 @@ class LiveTempoEstimation:
             figsize=(12, 6),
             num="Live tempo estimation",
         )
-
         for tt in self._target_tempos:
-            self._ax.axhline(y=tt, color="black", linestyle="--")
-
-        self._lines = [self._ax.plot([], [], label=label)[0] for label in self._labels]
-
+            self._ax.axhline(
+                y=tt,
+                color="black",
+                linestyle="--",
+                linewidth=2,
+            )
+        self._lines = [
+            self._ax.plot(
+                [],
+                [],
+                label=label,
+                linewidth=2,
+            )[0]
+            for label in self._labels
+        ]
         self._ax.legend()
         self._ax.set_xlabel("Time (s)")
         self._ax.set_ylabel("Tempo (bpm)")
