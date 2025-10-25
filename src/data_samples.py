@@ -102,7 +102,7 @@ validation_samples = {
     "Killing in the name - Studio": AnnotatedSample(
         Audio.from_file("data/audio/killing-in-the-name-studio-122-ish.mp3"),
         BeatAnnotation.from_json(
-            "annotations/killing-in-the-name-studio-122-ish-fix.json"
+            "data/annotations/killing-in-the-name-studio-122-ish-fix.json"
         ),
         120,
     ),
