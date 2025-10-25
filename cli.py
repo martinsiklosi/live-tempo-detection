@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
 from src.live_tempo_estimation import LiveTempoEstimation
-from src.tempo_estimators_robert import PhaseNoveltyEstimator
+from tempo_estimators import PhaseNoveltyEstimator
 
 ESTIMATORS = [
     PhaseNoveltyEstimator,
