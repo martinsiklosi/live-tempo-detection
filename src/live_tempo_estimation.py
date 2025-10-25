@@ -2,6 +2,7 @@ from queue import Queue, Empty
 from threading import Thread
 from typing import Iterable
 
+from matplotlib.ticker import MaxNLocator
 import matplotlib.pyplot as plt
 import sounddevice as sd
 import numpy as np
@@ -10,15 +11,24 @@ from src.data_models import Audio, ModelFactoryType
 
 
 class LiveTempoEstimation:
+    DEFAULT_ESTIMATION_INTERVAL_S = 0.2
+
     def __init__(
         self,
         initial_tempo: float,
         tempo_estimators: Iterable[ModelFactoryType],
         target_tempos: Iterable[float] | None = None,
-        estimation_interval_s: float = 1,
+        estimation_interval_s: float | None = None,
+        show_legend: bool = False,
     ) -> None:
+        _estimation_interval_s = (
+            estimation_interval_s
+            if estimation_interval_s is not None
+            else self.DEFAULT_ESTIMATION_INTERVAL_S
+        )
+
         self._sr = _get_sample_rate()
-        self._blocksize = round(estimation_interval_s * self._sr)
+        self._blocksize = round(_estimation_interval_s * self._sr)
 
         self._initial_tempo = initial_tempo
         self._target_tempos = [] if target_tempos is None else list(target_tempos)
@@ -26,6 +36,7 @@ class LiveTempoEstimation:
         self._estimators = [te(initial_tempo, self._sr) for te in tempo_estimators]
         self._estimated_tempos = [[] for _ in self._estimators]
         self._labels = [te.__name__ for te in tempo_estimators]
+        self._show_legend = show_legend
 
         self._audio_queue: Queue[Audio] = Queue()
         self._estimations_queue: Queue[list[float | None]] = Queue()
@@ -52,29 +63,27 @@ class LiveTempoEstimation:
         Initialize the plot.
         """
         plt.ion()
+        plt.style.use("fivethirtyeight")
+        plt.rcParams.update({"font.weight": "bold"})
+
         self._fig, self._ax = plt.subplots(
             figsize=(12, 6),
             num="Live tempo estimation",
         )
+        self._ax.xaxis.set_major_locator(MaxNLocator(integer=True))
+        self._ax.yaxis.set_major_locator(MaxNLocator(integer=True))
+
         for tt in self._target_tempos:
-            self._ax.axhline(
-                y=tt,
-                color="black",
-                linestyle="--",
-                linewidth=2,
-            )
+            self._ax.axhline(y=tt, color="black", linestyle="--", linewidth=3)
+
         self._lines = [
-            self._ax.plot(
-                [],
-                [],
-                label=label,
-                linewidth=2,
-            )[0]
-            for label in self._labels
+            self._ax.plot([], [], label=label, linewidth=4)[0] for label in self._labels
         ]
-        self._ax.legend()
-        self._ax.set_xlabel("Time (s)")
-        self._ax.set_ylabel("Tempo (bpm)")
+
+        if self._show_legend:
+            self._ax.legend()
+
+        self._ax.grid(visible=True)
         self._fig.tight_layout()
 
     def _audio_callback(self, indata: np.ndarray, *_) -> None:

@@ -1,13 +1,9 @@
 # TODO
 
-## Restructure python code?
+## Add tempo templates
 
-## Add tempo templated
-
-Want to be able to from beat annotation create and plot a tempo curve so you can follow it
+Want to be able to from beat annotation create and plot a tempo curve so you can follow it.
 
 ## Improve no tempo detection
 
-## Make plot better looking
-
-dark mode? grid?
+Perhaps with a volume threshhold.

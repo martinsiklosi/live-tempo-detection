@@ -32,7 +32,7 @@ def main() -> None:
         "--period",
         type=float,
         help="The interval at which the tempo is estimated (in seconds)",
-        default=1,
+        default=LiveTempoEstimation.DEFAULT_ESTIMATION_INTERVAL_S,
     )
 
     args = parser.parse_args()
