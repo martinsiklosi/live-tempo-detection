@@ -17,13 +17,13 @@ pip install -r requirements_core.txt
 To start the live tempo detection, run the following command with your initial tempo.
 
 ```bash
-python cli.py --initial-tempo 100
+python detect.py --initial-tempo 100
 ```
 
 To see all availible options, run 
 
 ```bash
-python cli.py --help
+python detect.py --help
 ```
 
 ## Credit
