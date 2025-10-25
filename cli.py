@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 
 from src.live_tempo_estimation import LiveTempoEstimation
-from tempo_estimators import PhaseNoveltyEstimator
+from src.tempo_estimators import PhaseNoveltyEstimator
 
 ESTIMATORS = [
     PhaseNoveltyEstimator,
@@ -24,7 +24,7 @@ def main() -> None:
         "-t",
         "--targets",
         type=int,
-        nargs="+",
+        nargs="*",
         help="Target tempos which will be plotted as horisontal lines",
     )
     parser.add_argument(
@@ -39,7 +39,7 @@ def main() -> None:
     LiveTempoEstimation(
         initial_tempo=args.initial,
         tempo_estimators=ESTIMATORS,
-        target_tempos=args.targets if args.targets else [],
+        target_tempos=args.targets if args.targets is not None else [args.initial],
         estimation_interval_s=args.period,
     ).spin()
 
