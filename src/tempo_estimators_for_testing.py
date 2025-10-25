@@ -3,7 +3,6 @@ import random
 import numpy as np
 
 from src.data_models import AbstractTempoEstimator, Audio
-from live_tempo_estimation import LiveTempoEstimation
 
 
 class NoisyInitialTempoRepeater(AbstractTempoEstimator):
@@ -46,20 +45,3 @@ class StochasticNoneEstimator(AbstractTempoEstimator):
         if random.random() > 0.8:
             return None
         return self.initial_tempo * random.uniform(0.9, 1.1)
-
-
-def main() -> None:
-    LiveTempoEstimation(
-        initial_tempo=100,
-        tempo_estimators=[
-            NoisyInitialTempoRepeater,
-            amplitude_is_tempo_strong,
-            amplitude_is_tempo_weak,
-            StochasticNoneEstimator,
-        ],
-        target_tempos=[120, 80],
-    ).spin()
-
-
-if __name__ == "__main__":
-    main()
