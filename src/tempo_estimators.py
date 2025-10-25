@@ -1,11 +1,9 @@
-from time import perf_counter_ns
-
 import numpy as np
 
-from src.tempo import tempo_distribution_around_guess
 from src.data_models import AbstractTempoEstimator, Audio
-from src.novelty import phase_novelty
+from src.tempo import tempo_distribution_around_guess
 from src.streamable_stft import StreamableSTFT
+from src.novelty import phase_novelty
 
 
 class PhaseNoveltyEstimator(AbstractTempoEstimator):
