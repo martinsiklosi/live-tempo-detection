@@ -25,3 +25,7 @@ To see all availible options, run
 ```bash
 python cli.py --help
 ```
+
+## Credit
+
+Amazing tempo estimation algorithm developed by Robert Olsson Kihlborg.
