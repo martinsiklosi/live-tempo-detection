@@ -68,7 +68,7 @@ class LiveTempoEstimation:
 
         self._fig, self._ax = plt.subplots(
             figsize=(12, 6),
-            num="Live tempo estimation",
+            num="Live tempo detection",
         )
         self._ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         self._ax.yaxis.set_major_locator(MaxNLocator(integer=True))
