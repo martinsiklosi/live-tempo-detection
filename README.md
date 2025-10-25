@@ -1,2 +1,27 @@
-# live-tempo-detection
-Visual tempo feedback for drummers
+# Live Tempo Detection
+
+Detect tempo and plot live. Intended to give non intrusive tempo feedback for drummers.
+
+## Install
+
+Requires Python $\ge$ 3.11.
+
+To install the necessary python dependencies, run 
+
+```bash
+pip install -r requirements_core.txt
+```
+
+## Run
+
+To start the live tempo detection, run the following command with your initial tempo.
+
+```bash
+python cli.py --initial-tempo 100
+```
+
+To see all availible options, run 
+
+```bash
+python cli.py --help
+```

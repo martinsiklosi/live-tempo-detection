@@ -1,0 +1,2 @@
+-r requirements_core.txt
+git+https://github.com/CPJKU/madmom.git

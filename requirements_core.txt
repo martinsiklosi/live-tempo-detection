@@ -1,0 +1,9 @@
+scikit-learn
+sounddevice
+matplotlib
+librosa
+numpy
+scipy
+tqdm
+jupyter
+torch
