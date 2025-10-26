@@ -122,9 +122,5 @@ def tempo_distribution_around_guess(
         / initial_guess
     )
     is_beat = chaos_factor <= chaos_threshold
-    #
-    # if is_beat:
-    #     plt.axvline(best_bpm, color='r')
-    # plt.plot(relevant_bpms, total_values)
-    # plt.show()
+
     return best_bpm, is_beat
