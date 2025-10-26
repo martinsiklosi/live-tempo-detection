@@ -10,8 +10,7 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
     TRIM_THRESHOLD_FACTOR = 2
     TRIM_KEEP_FACTOR = 1.1
     SIGNAL_PEAK_THRESHOLD = 0.2
-    TEMPO_PRIOR_ALPHA_PER_S = 0.5
-    TEMPO_ESTIMATION_ALPHA_PER_S = 1
+    TEMPO_PRIOR_ALPHA_PER_S = 1
 
     def __init__(
         self,
@@ -23,7 +22,6 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
         n_fft: int = 4000,
     ) -> None:
         self.tempo_prior = initial_tempo
-        self.tempo_estimation = initial_tempo
         self.audio: Audio = Audio.empty(sr)
 
         self.stft_window_size_s = stft_window_size_s
@@ -71,8 +69,7 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
             return None
 
         self._update_tempo_prior(tempo, elapsed_time_s=new_audio.duration)
-        self._update_tempo_estimation(tempo, elapsed_time_s=new_audio.duration)
-        return self.tempo_estimation
+        return tempo
 
     def _update_tempo_prior(self, new_tempo: float, elapsed_time_s: float) -> None:
         """
@@ -81,14 +78,6 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
         alpha = self.TEMPO_PRIOR_ALPHA_PER_S * elapsed_time_s
         alpha = np.clip(alpha, a_min=0, a_max=1)
         self.tempo_prior += alpha * (new_tempo - self.tempo_prior)
-
-    def _update_tempo_estimation(self, new_tempo: float, elapsed_time_s: float) -> None:
-        """
-        Update tempo estimation, with exponential smoothing.
-        """
-        alpha = self.TEMPO_ESTIMATION_ALPHA_PER_S * elapsed_time_s
-        alpha = np.clip(alpha, a_min=0, a_max=1)
-        self.tempo_estimation += alpha * (new_tempo - self.tempo_estimation)
 
     def _trim_audio(self) -> None:
         """
