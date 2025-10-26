@@ -5,9 +5,7 @@ from pathlib import Path
 import json
 import math
 
-import matplotlib.pyplot as plt
 import numpy as np
-import librosa
 
 
 class Audio:
@@ -49,6 +47,8 @@ class Audio:
         """
         Load audio from audio file.
         """
+        import librosa
+
         samples, sr = librosa.load(file, sr=None, mono=True, dtype=cls._DTYPE)
         return cls(samples=samples, sr=int(sr))
 
@@ -205,6 +205,8 @@ class BeatAnnotation:
         """
         Plot tempo over time.
         """
+        import matplotlib.pyplot as plt
+
         win_len_s = 4
         end_times = np.linspace(win_len_s, max(self.beat_times), num=100)
         tempos = [self[t - win_len_s : t].tempo for t in end_times]
