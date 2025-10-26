@@ -94,7 +94,7 @@ class Audio:
         """
         if n_samples < 0:
             raise ValueError("Number of samples cannot be negative")
-        n_samples = max(n_samples, self._length)
+        n_samples = min(n_samples, self._length)
         if n_samples == 0:
             return
 
