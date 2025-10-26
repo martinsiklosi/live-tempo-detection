@@ -1,4 +1,3 @@
-from librosa import stft
 import numpy as np
 
 
@@ -47,9 +46,11 @@ class StreamableSTFT:
         Takes in all samples and updates the spectogram with only the new data.
         Always send ALL samples, this function will take care of slicing.
         """
+        import librosa
+
         new_window = samples[len(self) * self.hop_length - offset :]
         if len(new_window) >= self.n_fft:
-            new_spectogram = stft(
+            new_spectogram = librosa.stft(
                 new_window,
                 win_length=self.win_length,
                 hop_length=self.hop_length,
