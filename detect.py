@@ -3,6 +3,7 @@ from argparse import ArgumentParser
 from src.live_tempo_detection import LiveTempoDetection
 from src.tempo_estimators import PhaseNoveltyEstimator
 
+
 ESTIMATORS = [
     PhaseNoveltyEstimator,
 ]
