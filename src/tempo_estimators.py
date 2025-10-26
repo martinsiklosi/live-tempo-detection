@@ -9,6 +9,7 @@ from src.novelty import phase_novelty
 class PhaseNoveltyEstimator(AbstractTempoEstimator):
     TRIM_THRESHOLD_FACTOR = 2
     TRIM_KEEP_FACTOR = 1.1
+    SIGNAL_PEAK_THRESHOLD = 0.2
 
     def __init__(
         self,
@@ -39,6 +40,9 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
         self._trim_audio()
         self.stft.update(self.audio.samples, offset=self.n_forgotten_audio_samples)
 
+        if not self._estimation_window_has_signal():
+            return None
+
         relevant_frame_count = int(self.estimation_window_s / self.stft_hop_size_s) + 1
         relevant_frames = self.stft.last_n_frames(relevant_frame_count)
         # Compute flux from relevant_frames
@@ -47,7 +51,6 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
             return None
 
         raw_pn = phase_novelty(relevant_frames)
-
         moving_window_size = min(int(0.2 / self.stft_hop_size_s), 3)  # 0.2 seconds
         pn = raw_pn - np.convolve(
             raw_pn,
@@ -57,13 +60,15 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
         pn[pn < 0] = 0
 
         tempo, has_beat = tempo_distribution_around_guess(
-            pn, frame_duration=self.stft_hop_size_s, initial_guess=self.current_tempo
+            pn,
+            frame_duration=self.stft_hop_size_s,
+            initial_guess=self.current_tempo,
         )
+        if not has_beat:
+            return None
 
-        if has_beat:
-            self.current_tempo = tempo
-            return self.current_tempo
-        return None
+        self.current_tempo = tempo
+        return self.current_tempo
 
     def _trim_audio(self) -> None:
         """
@@ -75,6 +80,14 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
             )
             self.audio.delete_from_start(n_to_forget)
             self.n_forgotten_audio_samples += n_to_forget
+
+    def _estimation_window_has_signal(self) -> bool:
+        """
+        Check wether audio contains more than noise.
+        """
+        estimation_window_samples = self.audio[-self.estimation_window_s :].samples
+        peak_amplitude = np.max(np.abs(estimation_window_samples))
+        return peak_amplitude > self.SIGNAL_PEAK_THRESHOLD
 
 
 def LongWindow(initial_tempo: float, sr: int) -> PhaseNoveltyEstimator:
