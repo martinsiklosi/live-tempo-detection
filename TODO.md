@@ -4,6 +4,6 @@
 
 Want to be able to from beat annotation create and plot a tempo curve so you can follow it.
 
-## Improve no tempo detection
+## Recording
 
-Perhaps with a volume threshhold.
+Add option to on close of graph save audio and plot.
