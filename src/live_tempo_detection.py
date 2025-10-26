@@ -43,6 +43,7 @@ class LiveTempoDetection:
         """
         Run live tempo detection.
         """
+        self._init_plot()
         Thread(target=self._estimation_loop, daemon=True).start()
         with sd.InputStream(
             samplerate=self._sr,
@@ -50,7 +51,6 @@ class LiveTempoDetection:
             channels=1,
             callback=self._audio_callback,
         ):
-            self._init_plot()
             self._spin_plot()
 
     def _init_plot(self) -> None:
