@@ -2,8 +2,6 @@ from queue import Queue, Empty
 from threading import Thread
 from typing import Iterable
 
-from matplotlib.ticker import MaxNLocator
-import matplotlib.pyplot as plt
 import sounddevice as sd
 import numpy as np
 
@@ -45,7 +43,6 @@ class LiveTempoDetection:
         """
         Run live tempo detection.
         """
-        self._init_plot()
         Thread(target=self._estimation_loop, daemon=True).start()
         with sd.InputStream(
             samplerate=self._sr,
@@ -53,15 +50,16 @@ class LiveTempoDetection:
             channels=1,
             callback=self._audio_callback,
         ):
-            timer = self._fig.canvas.new_timer(interval=10)
-            timer.add_callback(self._update_plot)
-            timer.start()
-            plt.show(block=True)
+            self._init_plot()
+            self._spin_plot()
 
     def _init_plot(self) -> None:
         """
         Initialize the plot.
         """
+        from matplotlib.ticker import MaxNLocator
+        import matplotlib.pyplot as plt
+
         plt.ion()
         plt.style.use("fivethirtyeight")
         plt.rcParams.update({"font.weight": "bold"})
@@ -86,6 +84,31 @@ class LiveTempoDetection:
         self._ax.grid(visible=True)
         self._fig.tight_layout()
 
+    def _spin_plot(self) -> None:
+        """
+        Start plotting
+        """
+        import matplotlib.pyplot as plt
+
+        timer = self._fig.canvas.new_timer(interval=10)
+        timer.add_callback(self._update_plot)
+        timer.start()
+        plt.show(block=True)
+
+    def _update_plot(self) -> None:
+        """
+        Update plot with new estimations.
+        """
+        try:
+            new_estimations = self._estimations_queue.get_nowait()
+        except Empty:
+            return
+
+        self._apply_estimations(new_estimations)
+        self._ax.relim()
+        self._ax.autoscale_view()
+        self._fig.canvas.draw_idle()
+
     def _audio_callback(self, indata: np.ndarray, *_) -> None:
         """
         Store new audio.
@@ -101,20 +124,6 @@ class LiveTempoDetection:
             new_audio = self._audio_queue.get()
             estimations = [e.listen(new_audio) for e in self._estimators]
             self._estimations_queue.put(estimations)
-
-    def _update_plot(self) -> None:
-        """
-        Update plot with new estimations.
-        """
-        try:
-            new_estimations = self._estimations_queue.get_nowait()
-        except Empty:
-            return
-
-        self._apply_estimations(new_estimations)
-        self._ax.relim()
-        self._ax.autoscale_view()
-        self._fig.canvas.draw_idle()
 
     def _apply_estimations(self, new_estimations: list[float | None]) -> None:
         """
