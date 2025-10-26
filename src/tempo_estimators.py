@@ -10,6 +10,8 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
     TRIM_THRESHOLD_FACTOR = 2
     TRIM_KEEP_FACTOR = 1.1
     SIGNAL_PEAK_THRESHOLD = 0.2
+    TEMPO_PRIOR_ALPHA_PER_S = 0.5
+    TEMPO_ESTIMATION_ALPHA_PER_S = 1
 
     def __init__(
         self,
@@ -20,20 +22,21 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
         stft_hop_size_s: float = 0.02,
         n_fft: int = 4000,
     ) -> None:
-        self.current_tempo: float = initial_tempo
+        self.tempo_prior = initial_tempo
+        self.tempo_estimation = initial_tempo
         self.audio: Audio = Audio.empty(sr)
 
-        self.stft_window_size_s: float = stft_window_size_s
-        self.stft_hop_size_s: float = stft_hop_size_s
+        self.stft_window_size_s = stft_window_size_s
+        self.stft_hop_size_s = stft_hop_size_s
 
         self.stft: StreamableSTFT = StreamableSTFT(
             n_fft,
             self.audio.s_to_samples(stft_window_size_s),
             self.audio.s_to_samples(stft_hop_size_s),
         )
-        self.estimation_window_s: float = estimation_window
+        self.estimation_window_s = estimation_window
 
-        self.n_forgotten_audio_samples: int = 0
+        self.n_forgotten_audio_samples = 0
 
     def listen(self, new_audio: Audio) -> float | None:
         self.audio.append(new_audio)
@@ -62,13 +65,30 @@ class PhaseNoveltyEstimator(AbstractTempoEstimator):
         tempo, has_beat = tempo_distribution_around_guess(
             pn,
             frame_duration=self.stft_hop_size_s,
-            initial_guess=self.current_tempo,
+            initial_guess=self.tempo_prior,
         )
         if not has_beat:
             return None
 
-        self.current_tempo = tempo
-        return self.current_tempo
+        self._update_tempo_prior(tempo, elapsed_time_s=new_audio.duration)
+        self._update_tempo_estimation(tempo, elapsed_time_s=new_audio.duration)
+        return self.tempo_estimation
+
+    def _update_tempo_prior(self, new_tempo: float, elapsed_time_s: float) -> None:
+        """
+        Update tempo prior, with exponential smoothing.
+        """
+        alpha = self.TEMPO_PRIOR_ALPHA_PER_S * elapsed_time_s
+        alpha = np.clip(alpha, a_min=0, a_max=1)
+        self.tempo_prior += alpha * (new_tempo - self.tempo_prior)
+
+    def _update_tempo_estimation(self, new_tempo: float, elapsed_time_s: float) -> None:
+        """
+        Update tempo estimation, with exponential smoothing.
+        """
+        alpha = self.TEMPO_ESTIMATION_ALPHA_PER_S * elapsed_time_s
+        alpha = np.clip(alpha, a_min=0, a_max=1)
+        self.tempo_estimation += alpha * (new_tempo - self.tempo_estimation)
 
     def _trim_audio(self) -> None:
         """
