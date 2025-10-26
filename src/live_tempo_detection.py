@@ -43,7 +43,7 @@ class LiveTempoDetection:
 
     def spin(self) -> None:
         """
-        Run live tempo estimation.
+        Run live tempo detection.
         """
         self._init_plot()
         Thread(target=self._estimation_loop, daemon=True).start()
