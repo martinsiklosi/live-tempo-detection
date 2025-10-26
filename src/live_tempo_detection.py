@@ -70,6 +70,12 @@ class LiveTempoDetection:
         self._ax.xaxis.set_major_locator(MaxNLocator(integer=True))
         self._ax.yaxis.set_major_locator(MaxNLocator(integer=True))
 
+        # hack for ensuring margin
+        margin = 5
+        tempos = self._target_tempos + [self._initial_tempo]
+        self._ax.axhline(y=min(tempos) - margin, color="none")
+        self._ax.axhline(y=max(tempos) + margin, color="none")
+
         for tt in self._target_tempos:
             self._ax.axhline(y=tt, color="black", linestyle="--", linewidth=3)
 
