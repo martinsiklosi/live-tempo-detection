@@ -2,6 +2,8 @@ from queue import Queue, Empty
 from threading import Thread
 from typing import Iterable
 
+from matplotlib.ticker import MaxNLocator
+import matplotlib.pyplot as plt
 import sounddevice as sd
 import numpy as np
 
@@ -44,22 +46,19 @@ class LiveTempoDetection:
         Run live tempo detection.
         """
         self._init_plot()
-        Thread(target=self._estimation_loop, daemon=True).start()
         with sd.InputStream(
             samplerate=self._sr,
             blocksize=self._blocksize,
             channels=1,
             callback=self._audio_callback,
         ):
+            Thread(target=self._estimation_loop, daemon=True).start()
             self._spin_plot()
 
     def _init_plot(self) -> None:
         """
         Initialize the plot.
         """
-        from matplotlib.ticker import MaxNLocator
-        import matplotlib.pyplot as plt
-
         plt.ion()
         plt.style.use("fivethirtyeight")
         plt.rcParams.update({"font.weight": "bold"})
@@ -88,8 +87,6 @@ class LiveTempoDetection:
         """
         Start plotting
         """
-        import matplotlib.pyplot as plt
-
         timer = self._fig.canvas.new_timer(interval=10)
         timer.add_callback(self._update_plot)
         timer.start()
